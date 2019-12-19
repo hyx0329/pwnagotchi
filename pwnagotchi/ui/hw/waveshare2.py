@@ -59,11 +59,23 @@ class WaveshareV2(DisplayImpl):
         self._display = EPD()
         self._display.init(self._display.FULL_UPDATE)
         self._display.Clear(0xff)
-        self._display.init(self._display.PART_UPDATE)
+        self._display.sleep()
+        self.protection_counter = 0
 
     def render(self, canvas):
         buf = self._display.getbuffer(canvas)
-        self._display.displayPartial(buf)
+
+        if(self.protection_counter//3 == 1):
+            self._display.init(self._display.FULL_UPDATE)
+            self.protection_counter = 0
+            self._display.display(buf)
+        else:
+            self._display.init(self._display.PART_UPDATE)
+            self.protection_counter += 1
+            self._display.displayPartial(buf)
+        self._display.sleep()
 
     def clear(self):
+        self._display.init(self._display.FULL_UPDATE)
         self._display.Clear(0xff)
+        self._display.sleep()

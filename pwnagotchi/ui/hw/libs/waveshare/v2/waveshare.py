@@ -65,7 +65,7 @@ def digital_write(pin, value):
 
 
 def digital_read(pin):
-    return GPIO.input(BUSY_PIN)
+    return GPIO.input(pin)
 
 
 def delay_ms(delaytime):
@@ -85,7 +85,7 @@ def module_init():
     GPIO.setup(BUSY_PIN, GPIO.IN)
     SPI.max_speed_hz = 2000000
     SPI.mode = 0b00
-    return 0;
+    return 0
 
 
 # Display resolution
@@ -327,10 +327,6 @@ class EPD:
         self.TurnOnDisplay()
 
     def sleep(self):
-        self.send_command(0x22)  # POWER OFF
-        self.send_data(0xC3)
-        self.send_command(0x20)
-
         self.send_command(0x10)  # enter deep sleep
         self.send_data(0x01)
         delay_ms(100)
